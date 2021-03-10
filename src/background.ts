@@ -1,3 +1,11 @@
+/*
+ * @Author       : Zhao Dongxu
+ * @Desc         :  
+ * @Date         : 2021-03-09 16:48:33
+ * @LastEditors  : Zhao Dongxu
+ * @LastEditTime : 2021-03-10 17:52:18
+ * @FilePath     : \src\background.ts
+ */
 'use strict'
 
 import { app, protocol, BrowserWindow, Menu } from 'electron'
@@ -13,8 +21,9 @@ protocol.registerSchemesAsPrivileged([
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 1000,
-    height: 1200,
+    width: 1022,
+    height: 670,
+    frame: false,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info

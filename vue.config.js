@@ -10,10 +10,9 @@ module.exports = {
         host: '0.0.0.0',
         port: VUE_APP_PORT || 8000,
         // 配置反向代理
-        /*
         proxy: {
-            '/api': {
-              target: '<url>',
+            '/': {
+              target: 'http://kh.ccbus.xyz:3000/',
               ws: true,
               changeOrigin: true
             },
@@ -21,7 +20,6 @@ module.exports = {
               target: '<other_url>'
             }
         }, 
-        */
         before: function(app, server) {
             if(NODE_ENV === 'development' && VUE_APP_MOCK === 'true') {
                 // parse app.body

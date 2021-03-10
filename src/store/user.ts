@@ -1,11 +1,21 @@
-import { Mutation, Action } from 'vuex';
+/*
+ * @Author       : Zhao Dongxu
+ * @Desc         :  
+ * @Date         : 2021-03-09 16:48:33
+ * @LastEditors  : Zhao Dongxu
+ * @LastEditTime : 2021-03-10 13:59:20
+ * @FilePath     : \src\store\user.ts
+ */
+import { Mutation, Action, useStore } from 'vuex';
 import { StoreModuleType } from "@/utils/store";
+import { computed } from "vue";
 import { ResponseData } from '@/utils/request';
 import { queryCurrent, queryMessage } from "@/services/user";
+import { StateType as UserStateType } from "@/store/user";
 import { removeToken } from "@/utils/localToken";
 
 export interface CurrentUser {
-  id: number;
+  userId: number;
   name: string;
   avatar: string;
   roles: string[];
@@ -31,7 +41,7 @@ export interface ModuleType extends StoreModuleType<StateType> {
 
 const initState: StateType = {
   currentUser: {
-    id: 0,
+    userId: 0,
     name: '',
     avatar: '',
     roles: [],
@@ -57,15 +67,18 @@ const StoreModel: ModuleType = {
     }
   },
   actions: {
-    async fetchCurrent({ commit }) {
-      try {
-        const response: ResponseData = await queryCurrent();
-        const { data } = response;
-        commit('saveCurrentUser', data || {});
-        return true;
-      } catch (error) {
-        return false;
-      }
+    async fetchCurrent({ commit }, payload: number) {
+      const store = useStore();
+      console.log(store.state.userlogin.userAccount.profile)
+      // try {
+      //   const response: ResponseData = await queryCurrent(payload);
+      //   console.log(response)
+      //   const { data } = response;
+        commit('saveCurrentUser', store.state.userlogin.userAccount.profile || {});
+      //   return true;
+      // } catch (error) {
+      //   return false;
+      // }
     },
     async fetchMessage({ commit }) {
       try {

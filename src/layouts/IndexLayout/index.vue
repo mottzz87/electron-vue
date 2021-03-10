@@ -1,20 +1,20 @@
 <template>
     <div id="indexlayout">
-        <left
+        <!-- <left
           :collapsed="collapsed"
           :topNavEnable="topNavEnable"
           :belongTopMenu="belongTopMenu"
           :defaultActive="defaultActive"
           :menuData="permissionMenuData"
         >
-        </left>
+        </left> -->
 
         <div
           id="indexlayout-right"
           :class="{'fiexd-header': headFixed}"
         >
 
-            <right-top
+            <!-- <right-top
               :collapsed="collapsed"
               :topNavEnable="topNavEnable"
               :belongTopMenu="belongTopMenu"
@@ -22,8 +22,8 @@
               :breadCrumbs="breadCrumbs"
               :menuData="permissionMenuData"
             >              
-            </right-top>
-
+            </right-top> -->
+            <Header/>
             <div class="indexlayout-right-main">
                 <permission :roles="routeItem.roles">
                   <router-view></router-view>
@@ -39,6 +39,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, computed } from "vue";
+import Header from '@/views/netease/dashboard/Header.vue'
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import { StateType as GlobalStateType } from '@/store/global';
@@ -52,8 +53,8 @@ import { mergeUnique as ArrayMergeUnique } from '@/utils/array';
 import useTitle from '@/composables/useTitle';
 import IndexLayoutRoutes from './routes';
 import Permission from '@/components/Permission/index.vue';
-import Left from './components/Left.vue';
-import RightTop from './components/RightTop.vue';
+// import Left from './components/Left.vue';
+// import RightTop from './components/RightTop.vue';
 import RightFooter from './components/RightFooter.vue';
 import Settings from "./components/Settings.vue";
 
@@ -73,8 +74,9 @@ export default defineComponent({
     name: 'IndexLayout',
     components: {
         Permission,
-        Left,
-        RightTop,
+        // Left,
+        Header,
+        // RightTop,
         RightFooter,
         Settings
     },

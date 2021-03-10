@@ -1,3 +1,11 @@
+<!-- 
+ * Author       : Zhao Dongxu
+ * Desc         :  
+ * Date         : 2021-03-09 16:48:33
+ * LastEditors  : Zhao Dongxu
+ * LastEditTime : 2021-03-10 13:59:29
+ * FilePath     : \src\layouts\SecurityLayout.vue
+ -->
 <template>
     <spin v-if="(!isLogin && loading) || !isReady" style="height: 200px;"/>
     <router-view v-if="isLogin" />
@@ -27,9 +35,8 @@ export default defineComponent({
 
         // 获取当前登录用户信息
         const currentUser = computed<CurrentUser>(()=> store.state.user.currentUser);
-
         // 判断是否登录
-        const isLogin = computed<boolean>(()=> currentUser.value ? currentUser.value.id > 0 : false);
+        const isLogin = computed<boolean>(()=> currentUser.value.userId ? currentUser.value.userId > 0 : false);
 
         // 读取当前用户信息func
         const isReady = ref<boolean>(false); // 是否读取过用户信息

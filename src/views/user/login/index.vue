@@ -4,8 +4,8 @@
             {{t('page.user.login.form.title')}}
         </h1>
         <el-form :model="modelRef" :rules="rulesRef" ref="formRef">
-            <el-form-item  label="" prop="username">
-                <el-input v-model="modelRef.username" :placeholder="t('page.user.login.form-item-username')" @keydown.enter="handleSubmit">
+            <el-form-item  label="" prop="phone">
+                <el-input v-model="modelRef.phone" :placeholder="t('page.user.login.form-item-username')" @keydown.enter="handleSubmit">
                     <template #prefix><i class="el-icon-user el-input__icon"></i></template>
                 </el-input>
             </el-form-item>
@@ -62,12 +62,12 @@ export default defineComponent({
 
         // 表单值
         const modelRef = reactive<LoginParamsType>({
-            username: '',
-            password: ''
+            phone: '18615766873',
+            password: '123456'
         });
         // 表单验证
         const rulesRef = reactive({
-            username: [
+            phone: [
                 {
                     required: true,
                     message: t('page.user.login.form-item-username.required'),

@@ -1,3 +1,11 @@
+/*
+ * @Author       : Zhao Dongxu
+ * @Desc         :  
+ * @Date         : 2021-03-09 16:48:33
+ * @LastEditors  : Zhao Dongxu
+ * @LastEditTime : 2021-03-09 17:43:30
+ * @FilePath     : \src\config\settings.ts
+ */
 /**
  * 站点配置
  * @author 
@@ -46,8 +54,8 @@ const settings: SettingsType = {
     siteTokenKey: 'admin_element_vue_token',
     ajaxHeadersTokenKey: 'x-token',
     ajaxResponseNoVerifyUrl: [
-        '/user/login', // 用户登录
-        '/user/info', // 获取用户信息
+        '/login/cellphone', // 用户登录
+        '/user/detail', // 获取用户信息
     ],
     iconfontUrl: [],
 };
