@@ -3,7 +3,7 @@
  * @Desc         :  
  * @Date         : 2021-03-09 16:48:33
  * @LastEditors  : Zhao Dongxu
- * @LastEditTime : 2021-03-10 14:16:29
+ * @LastEditTime : 2021-03-12 16:09:55
  * @FilePath     : \src\views\user\login\store.ts
  */
 import { Mutation, Action } from 'vuex';
@@ -61,7 +61,6 @@ const StoreModel: ModuleType = {
     actions: {
         async login({ commit }, payload: LoginParamsType) {
             let status = undefined;
-            console.log(payload)
             try {
                 const response: ResponseData = await accountLogin(payload);
                 setToken(response.token || '');

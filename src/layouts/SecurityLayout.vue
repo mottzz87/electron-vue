@@ -3,7 +3,7 @@
  * Desc         :  
  * Date         : 2021-03-09 16:48:33
  * LastEditors  : Zhao Dongxu
- * LastEditTime : 2021-03-10 13:59:29
+ * LastEditTime : 2021-03-12 16:10:17
  * FilePath     : \src\layouts\SecurityLayout.vue
  -->
 <template>
@@ -16,6 +16,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import Spin from '@/components/Spin/index.vue';
 import { StateType as UserStateType, CurrentUser } from "@/store/user";
+import { getToken } from '@/utils/localToken';
 
 interface SecurityLayoutSetupData {
     isLogin: boolean;
@@ -33,10 +34,10 @@ export default defineComponent({
         const router = useRouter();
         const store = useStore<{user: UserStateType}>();
 
-        // 获取当前登录用户信息
-        const currentUser = computed<CurrentUser>(()=> store.state.user.currentUser);
-        // 判断是否登录
-        const isLogin = computed<boolean>(()=> currentUser.value.userId ? currentUser.value.userId > 0 : false);
+        // // 获取当前登录用户信息
+        // const currentUser = computed<CurrentUser>(()=> store.state.user.currentUser);
+        // // 判断是否登录
+        const isLogin = true;
 
         // 读取当前用户信息func
         const isReady = ref<boolean>(false); // 是否读取过用户信息
@@ -44,7 +45,9 @@ export default defineComponent({
         const getUser = async () => {
             loading.value = true;
             await store.dispatch('user/fetchCurrent');
-            if(!isLogin.value && router.currentRoute.value.path !== '/user/login') {
+            const isLogin = !!(await getToken());
+            console.log(store.state)
+            if(!isLogin && router.currentRoute.value.path !== '/user/login') {
                 router.replace({
                     path: '/user/login',
                     query: {

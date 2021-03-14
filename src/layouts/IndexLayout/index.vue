@@ -28,12 +28,12 @@
                 <permission :roles="routeItem.roles">
                   <router-view></router-view>
                 </permission>
-                <right-footer></right-footer>
+                <!-- <right-footer></right-footer> -->
             </div>
 
         </div>
 
-        <settings></settings>
+        <!-- <settings></settings> -->
 
     </div>
 </template>
@@ -56,7 +56,7 @@ import Permission from '@/components/Permission/index.vue';
 // import Left from './components/Left.vue';
 // import RightTop from './components/RightTop.vue';
 import RightFooter from './components/RightFooter.vue';
-import Settings from "./components/Settings.vue";
+// import Settings from "./components/Settings.vue";
 
 interface IndexLayoutSetupData {
   collapsed: boolean;
@@ -77,8 +77,8 @@ export default defineComponent({
         // Left,
         Header,
         // RightTop,
-        RightFooter,
-        Settings
+        // RightFooter,
+        // Settings
     },
     setup(): IndexLayoutSetupData {
         const store = useStore<{

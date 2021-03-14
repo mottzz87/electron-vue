@@ -3,7 +3,7 @@
  * @Desc         :  
  * @Date         : 2021-03-09 16:48:33
  * @LastEditors  : Zhao Dongxu
- * @LastEditTime : 2021-03-10 13:59:20
+ * @LastEditTime : 2021-03-11 14:57:38
  * @FilePath     : \src\store\user.ts
  */
 import { Mutation, Action, useStore } from 'vuex';
@@ -69,7 +69,6 @@ const StoreModel: ModuleType = {
   actions: {
     async fetchCurrent({ commit }, payload: number) {
       const store = useStore();
-      console.log(store.state.userlogin.userAccount.profile)
       // try {
       //   const response: ResponseData = await queryCurrent(payload);
       //   console.log(response)
@@ -91,6 +90,7 @@ const StoreModel: ModuleType = {
       }
     },
     async logout({ commit }) {
+      console.log(111111111)
       try {
         await removeToken();
         commit('saveCurrentUser', { ...initState.currentUser });

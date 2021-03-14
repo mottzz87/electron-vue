@@ -3,7 +3,7 @@
  * @Desc         :  
  * @Date         : 2021-03-09 16:48:33
  * @LastEditors  : Zhao Dongxu
- * @LastEditTime : 2021-03-10 17:52:18
+ * @LastEditTime : 2021-03-12 10:53:07
  * @FilePath     : \src\background.ts
  */
 'use strict'
@@ -21,7 +21,7 @@ protocol.registerSchemesAsPrivileged([
 async function createWindow() {
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 1022,
+    width: 1020,
     height: 670,
     frame: false,
     webPreferences: {

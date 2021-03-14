@@ -1,202 +1,40 @@
 <template>
-  <div class="header alignCenter" style="-webkit-app-region: drag;">
-      <div class="logoContainer alignCenter" @click="tofind">
-          <i class="logo"></i>
-          <p class="name">网易云音乐</p>
+  <div class="header line-center drag">
+      <div class="logo-wrapper line-center nodrag-pointer" @click="tofind">
+          <div class="logo"></div>
+          <div class="name">网易云音乐</div>
       </div>
-      <div class="searchContainer" style="-webkit-app-region: drag;">
-          <span class="prev iconfont icon-zuo" @click="prev" :class="{'active':true}" style="-webkit-app-region: no-drag;"></span><span class="next iconfont icon-you" style="-webkit-app-region: no-drag;" :class="{'active':true}" @click="next" ></span>
-          <input type="text" placeholder="搜索音乐，视频，歌词，电台" style="-webkit-app-region: no-drag;" maxlength="14"
-          @focus="inithotSearch"  v-model="keywords" @keyup="adviseSearch"  @keyup.enter="searchAll"
-          >
-          <i class="iconfont icon-sousuo" style="-webkit-app-region: no-drag;" @click="searchAll"></i>
-          <i class="iconfont icon-code" style="-webkit-app-region: no-drag;" v-if="keywords" @click="keywords = ''"></i>
+      <div class="search-wrapper line-center">
+          <span class="prev el-icon-arrow-left nodrag-pointer" @click="prev" :class="{'active':true}" ></span>
+          <span class="next el-icon-arrow-right nodrag-pointer" @click="next" :class="{'active':true}"  ></span>
+          <input class="search text nodrag" type="text" placeholder="搜索" 
+            @focus="inithotSearch"  v-model="keywords" @keyup="adviseSearch"  @keyup.enter="searchAll"
+          />
+          <i class="el-icon-search icon-search nodrag" @click="searchAll"></i>
+          <i class="el-icon-microphone icon-mic nodrag"  @click="toMic"></i>
       </div>
-      <div class="headerNav alignCenter" style="-webkit-app-region: drag;">
-          <i class="iconfont icon-geren" style="-webkit-app-region: no-drag;" v-show="!userName"></i>
-          <img class="userimg" :src="avatarUrl" v-show="userName"/>
-          <p class="state" style="-webkit-app-region: no-drag;" @click.stop="dialogVisible = true" v-show="!userName">未登录</p>
-          <p class="state" style="-webkit-app-region: no-drag;" v-show="userName"  @click="showDrap">{{nickName}}</p>  
-          <i class="iconfont icon-xiasanjiao" style="-webkit-app-region: no-drag;" v-if="!userName"></i>
-          <i class="iconfont icon-xiasanjiao" style="-webkit-app-region: no-drag;" v-if="userName" @click="showDrap"></i>
-          <i class="iconfont icon-yifu" style="-webkit-app-region: no-drag;"></i>
-          <i class="iconfont icon-youjian" style="-webkit-app-region: no-drag;"></i>
-          <i class="iconfont icon-shezhi-tianchong" style="-webkit-app-region: no-drag;"></i>
-          <i>|</i>
-          <i class="iconfont icon-jianhao" style="-webkit-app-region: no-drag;" @click="min"></i>
-          <i class="iconfont icon-rectangle" style="-webkit-app-region: no-drag;"  @click="max"></i>
-          <i class="iconfont icon-code" style="-webkit-app-region: no-drag;" @click="close"></i>
-      </div>
-      <!-- 登录弹框 -->
-      <el-dialog
-        title="请输入手机号和密码"
-        v-model:visible="dialogVisible"
-        :append-to-body='true'
-        width="30%"
-        :before-close="handleClose">
-        <span class="iphone">手机号：</span><input type="text" class="username" v-model="username" placeholder="请输入手机号"> <br>
-        <span class="pass">密&nbsp;&nbsp;&nbsp;码：</span><input type="password" class="password" v-model="password" placeholder="请输入密码" @keyup.enter="login">
-        <span class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="login">确 定</el-button>
-        </span>
-        </el-dialog>
-        <!-- 退出确认弹框 -->
-        <el-dialog
-            title="是否确认退出"
-            v-model:visible="logoutVisible"
-            :append-to-body='true'
-            width="30%"
-            :before-close="handleLogutClose">
-            <span class="dialog-footer">
-                <el-button @click="logoutVisible = false">取 消</el-button>
-                <el-button type="primary" @click="logout">确 定</el-button>
-            </span>
-        </el-dialog>
-        <div class="modules" @click="drap = false,searchDrap = false,adviseDrap = false" v-if="drap || searchDrap || adviseDrap"></div>
-        <transition name="fade">
-            <div class="dropContainer" v-if="drap">
-                <!-- <drop-list>
-                    <template v-slot:header>
-                        <img class="userimg" :src="avatarUrl"/>
-                        <p class="state" style="-webkit-app-region: no-drag;">{{nickName}}</p>
-                        <p class="sign">签到</p>
-                    </template>
-                    <ul class="message allCenter">
-                        <li><b>0</b><p>动态</p></li>
-                        <li><b>3</b><p>关注</p></li>
-                        <li><b>1</b><p>粉丝</p></li>
-                    </ul>
-                    <ul class="other">
-                        <li><p><i class="iconfont icon-bendiyinle"></i>会员中心</p><i class="iconfont icon-you"></i></li>
-                        <li><p><i class="iconfont icon-dengji"></i>等级</p><i class="iconfont icon-you"></i></li>
-                        <li><p><i class="iconfont icon-cart-copy"></i>商城</p><i class="iconfont icon-you"></i></li>
-                        <li><p><i class="iconfont icon-shezhi-tianchong"></i>个人信息设置</p><i class="iconfont icon-you"></i></li>
-                        <li><p><i class="iconfont icon-shouji"></i>绑定社交账号</p><i class="iconfont icon-you"></i></li>
-                    </ul>
-                    <template v-slot:footer>
-                        <div class="logout" @click.stop="logoutVisible = true">
-                            退出登录
-                        </div>
-                    </template>
-                </drop-list> -->
-            </div>
-        </transition>
-        <transition name="fade">
-            <div class="dropContainer2 clearFix" v-if="searchDrap">
-                <drop-list :width="450">
-                    <template v-slot:header>
-                        <div class="hotSearch alignCenter">
-                            <i class="iconfont icon-sousuo"></i>
-                            <p class="hsTitle">热门搜索</p>
-                        </div>
-                        <div class="hotSearch alignCenter">
-                            <i class="iconfont icon-shijian"></i>
-                            <p class="hisTitle">搜索历史</p>
-                        </div>
-                    </template>
-                    <ul class="ItemContainer">
-                        <li class="ItemContent" v-for="item in hotSearchList" :key="item.first"
-                        @click="hotSearch(item.first)"
-                        >{{item.first}}</li>
-                    </ul>
-                    <ul class="ItemContainer">
-                        <p class="nothing" v-if="hisSearchList.length == 0">暂无搜索历史</p>
-                        <li class="ItemContent" v-for="(item,index) in hisSearchList" :key="item"
-                        @click="keywords = item,searchDrap = false,searchAll()"
-                        >{{item}} <i class="iconfont icon-code del" @click.stop="delHisSearchItem(index)"></i></li>
-                    </ul>
-                </drop-list>
-            </div> 
-        </transition>
-        <transition name = "fade">
-            <div class="dropContainer3" v-if="adviseDrap">
-                <drop-list :width="230">
-                    <template #header>
-                        <p class="searchTitle" @click="searchAll">搜“{{keywords}}”相关的结果></p>
-                    </template>
-                    <div class="adviseItem">
-                        <div class="ItemTitle"><i class="iconfont icon-yinle"></i>单曲</div>
-                        <ul class="adviseItemContainer">
-                            <li class="adviseItemContent" v-for="(item,index) in adviseSongList" :key="index" @click="playSong(item.mid,item.aid,index)">
-                                {{item.name}}&nbsp;-&nbsp;{{item.singer}}
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="adviseItem">
-                        <div class="ItemTitle"><i class="iconfont icon-geren"></i>歌手</div>
-                        <ul class="adviseItemContainer">
-                            <li class="adviseItemContent" v-for="(item,index) in adviseSearchList.artists" :key="index" @click="toSinger(item.id)">
-                                {{item.name}}
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="adviseItem">
-                        <div class="ItemTitle"><i class="iconfont icon-zhuanji"></i>专辑</div>
-                        <ul class="adviseItemContainer">
-                            <li class="adviseItemContent" v-for="(item,index) in adviseSearchList.albums" :key="index" @click="toAlbum(item.id)">
-                                {{item.name}}&nbsp;-&nbsp;{{item.artist.name}}
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="adviseItem">
-                        <div class="ItemTitle"><i class="iconfont icon-gedan"></i>歌单</div>
-                        <ul class="adviseItemContainer">
-                            <li class="adviseItemContent" v-for="(item,index) in adviseSearchList.playlists" :key="index" @click="toSongList(item.id)">
-                                {{item.name}}
-                            </li>
-                        </ul>
-                    </div>
-                </drop-list>
-            </div>
-        </transition>
   </div>
 </template>
 
 <script>
-// import DropList from '../base/DropList'
-// import {createSong} from '../common/song'
 import {mapMutations,mapGetters,mapActions} from 'vuex'
+import * as Api from '@/services/netease/dashboard'
 import {Axios,cellLogin,getUserSongList,getUserCollectSinger,getUserLikeMusic,
 getUserPlayHistory,Logout,getHotSearch,adviseSearch,getAlbumDetail,getSongUrl,
 getCollectAlbum} from './api'
-
-// import encrypt from '../common/word'
 
 const {ipcRenderer} = import('electron')
 
 export default {
     data() {
         return {
-            isLast: false,
-            isFirst: false,
-            dialogVisible: false,
-            logoutVisible: false,
-            drap: false,                                        
-            searchDrap: false,
-            adviseDrap: false,
-            iTime: '',
-            id:'',
-            params:'',
-            username:'',
-            password:'',
-            keywords:'',
-            hotSearchList:[],
-            hisSearchList:[],
-            adviseSearchList:[],
-            adviseSongList:[]
+            keywords: '',
+            hotSearchList: null,
         }
     },
     computed: {
         ...mapGetters([
-            'userName',
-            'nickName',
-            'userId',
-            'avatarUrl',
-            'collectSongList',
-            'collectSinger',
-            'playHistoryList',
-            'collectSong'
+            
         ])
     }, 
     components: {
@@ -241,54 +79,13 @@ export default {
         },
         // 检查登录状态
         checkLogin() {
-            const data = this._getCookies()
-            if(!data.username) {
-                return
-            }
+            console.log(this.$store.state.userlogin.loginStatus === 'ok')
+            if(this.$store.state.userlogin.loginStatus !== 'ok') return 
+           
 
-            const params = {
-                phone: parseInt(data.username),
-                password: data.password,
-                timestamp: (new Date()).getTime()
-            }
-
-            Axios(cellLogin,params).then((res) => {
-                this.id = res.account.id
-                this.params = {
-                    uid : this.id
-                }
-                this.setUserName(data.username)
-                this.setUserId(res.profile.userId)
-                this.setNickName(res.profile.nickname);
-                this.setAvatarUrl(res.profile.avatarUrl);
-                this.username = '';
-                this.password = '';
-                this._initCollects()
-            })
         },
 
-        _getCookies() {
-           let username,password
-            this.cookies.forEach((item) => {
-                const arr = item.split('=')
-                if(arr[0] == "info" || arr[0] == " info") {
-                    const info = arr[1].split('&')
-                    info.forEach((item) => {
-                        if(item.split(':')[0] == "username") {
-                            username = item.split(':')[1]
-                        }else {
-                            password = item.split(':')[1]
-                        }
-                    })
-                }
-            })
-            
-            // password = encrypt.Decrypt(password)
-            return {
-                username:username,
-                password:password
-            }
-        },
+        
 
         // 登录
         login() {
@@ -399,10 +196,10 @@ export default {
                 this.adviseSearch()
             }else{
                 this.searchDrap = true
-                if(this.hotSearchList.length > 0) {
+                if(this.hotSearchList) {
                     return
                 }
-                Axios(getHotSearch).then((res) => {
+                getHotSearch({keywords: this.keywords}).then((res) => {
                     this.hotSearchList = res.result.hots
                 })
                 if(localStorage.getItem('hisSearchList')) {
@@ -514,377 +311,119 @@ export default {
         }),
         ...mapActions([
             'insertSong'
-        ])
+        ]),
+        //听歌识曲
+        toMic(){
+            console.log(1)
+        }
     },
 }
 </script>
 
 <style lang="scss">
 @import '../../../assets/css/base.scss';
-    .username, .password{
-        height: 30px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        padding-left: 10px;
+.line-center{
+    display: flex;
+    align-items: center;
+}
+.header{
+    width: 100%;
+    height: 60px;
+    background-color: #ff1a1ad1
+}
+.drag{
+    -webkit-app-region: drag;
+}
+.nodrag{
+    -webkit-app-region: no-drag;
+}
+.nodrag-pointer{
+    -webkit-app-region: no-drag;
+    cursor: pointer;
+}
+.iconfont {
+    font-size: 12px;
+    margin-right: 5px;
+}
+.logo-wrapper {
+    // width: 180px;
+    height: 100%;
+    margin-right: 50px;
+    .logo {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        margin: 0 2px 0 18px;
+        background: url('../../../assets/images/logo.jpg') no-repeat center;
+        background-size: cover;
     }
-    .header {
-        width: 100%;
-        height: 50px;
-        position: fixed;
-        top: 0;
-        z-index: 999;
-        background: #C62F2F;
-        .dialog-footer {
-            margin-right: 60px;
+    .name {
+        color: white;
+        font-weight: bold;
+        margin-left: 5px;
+        line-height: 25px;
+        font-family:"幼圆";
+    }
+}
+.search-wrapper{
+    margin-left: 46px;
+    span .active {
+        color:white;
+    }
+    .prev,.next{
+        border-radius: 50%;
+        font-size: 14px;
+        /* border: 1px solid #A82828; */
+        background: rgba(179, 65, 65, 0.23);
+        padding: 5px;
+        color: rgba(255, 255, 255, 0.5);
+    }
+    .next {
+        border-left:none;
+        margin-right: 14px;
+        margin-left: 8px;
+    }
+    input{
+        width: 160px;
+        border-radius: 30px;
+        padding: 10px 11px 10px 30px;
+        background: rgba(179, 65, 65, 0.23);
+        -webkit-app-region: no-drag;
+        color: white;
+        box-sizing: border-box;
+        border: none;
+        font-size: 12px;
+        &::placeholder {
+            font-size: 12px;
+            color: #f08989;
+            // color: rgba(161,40,40,0.);
         }
-        .modules {
-            position: fixed;
-            width: 100%;
-            height: 1000%;
-        }
-        .dropContainer {
-            cursor: pointer;
-            position: absolute;
-            top: 50px;
-            height:370px;
-            right: 440px;
-            opacity: 1;
-            &::before {
-                content:'';
-                background: #FAFAFA;
-                height: 15px;
-                width: 15px;
-                position: absolute;
-                top: -7px;
-                left: 130px;
-                z-index: 201;
-                transform: rotate(135deg);
-            }
-            .userimg {
-                width: 40px;
-                height: 40px;
-                border: none;
-                border-radius: 50%;
-                margin: 20px 10px 0 20px;
-            }
-            .state {
-                display: inline-block;
-                position: relative;
-                top: -10px;
-                font-size: 15px;
-                color: black;
-            }
-            .sign {
-                width: 60px;
-                position: absolute;
-                top: 30px;
-                right: 10px;
-                height: 25px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                font-size: 12px;
-                line-height: 25px;
-                text-align: center;
-            }
-            .message {
-                width: 100%;
-                height: 70px;
-                border-bottom: 1px solid #ccc;
-                li {
-                    width:33.3333%;
-                    b,p {
-                        text-align: center;
-                        width: 100%; 
-                    }
-                    b{
-                        font-size: 20px;
-                        font-weight: bold;
-                        display: block;
-                        margin-bottom: 5px;
-                    }
-                    p{
-                        color: #444444;
-                        font-size: 12px
-                    }
-                    
-                }
-            }
-            .other {
-                li {
-                    box-sizing: border-box;
-                    display: flex;
-                    justify-content: space-between;
-                    height: 38px;
-                    width: 100%;
-                    transition: all 0.2s ease-in;
-                    p {
-                        padding: 15px 20px;
-                        font-size: 13px;
-                        i {
-                            font-size: 18px;
-                            color: #8F8E94;
-                        }
-                    }
-                    i {
-                        padding: 18px 10px;
-                        color: #D5D5D6;
-                        font-size: 12px;
-                    }
-                    &:hover{
-                        transition: all 0.2s ease-in;
-                        background: #EBECED;
-                    }
-                }
-            }
-            .logout {
-                border-top: 1px solid #ccc;
-                padding: 15px 30px;
-                box-sizing: border-box;
-                font-size: 13px;
-                width: 100%;
-                cursor: pointer;
-                transition: all 0.2s ease-in;
-                &:hover{
-                        background: #EBECED;
-                        transition: all 0.2s ease-in;
-                    }
-            }
-        }
-        .fade-enter,.fade-leave-to {
-            opacity: 0;
-        }
-        .fade-enter-active,.fade-leave-active {
-            transition: opacity .2s ease-in;
-        }
-        .logoContainer {
-            width: 0 0 180px;
-            cursor: pointer;
-            .logo {
-            display: block;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: url('../../../assets/images/logo.png');
-            background-size: 22px 22px;
-            margin-left: 15px;
-            }
-            .name {
-                color: white;
-                font-weight: bold;
-                margin-left: 5px;
-                line-height: 25px;
-                font-family:"幼圆";
-            }
-        }
-        .searchContainer {
-            flex: 0 0 360px;
-            margin-left: 130px;
-            span.active {
-                color:white;
-            }
-            .prev,.next{
-                border: 1px solid #A82828;
-                padding: 3px;
-                color: rgba(255,255,255,0.5);
-                font-size: 12px;
-            }
-            .next {
-                border-left:none;
-                margin-right: 8px;
-            }
-            input {
-                height: 22px;
-                width: 220px;
-                background: rgba(0,0,0,0.2);
-                border-radius: 10px;
-                padding-left: 10px;
-                color: white;
-                box-sizing: border-box;
-                font-size: 13px;
-                &::placeholder {
-                    font-size: 12px;
-                    color: #C77373;
-                }
-                &:focus{
-                    border:none;
-                    outline: none;
-                }
-            }
-            .icon-sousuo,.icon-code {
-                cursor: pointer;
-                position: relative;
-                left: -30px;
-                font-size: 14px;
-                color: #C77373;
-                &:hover{
-                    color: white;
-                    transition: color .2s ease-in;
-                }
-            }
-            .icon-code {
-                left: -70px;
-            }
-        }
-        .headerNav {
-            flex: 1 0 auto;
-            display: flex;
-            justify-content: flex-end;
-            cursor: pointer;
-            .userimg {
-                width: 25px;
-                height: 25px;
-                border: none;
-                border-radius: 50%;
-            }
-            i {
-                padding-left: 25px;
-                color: rgba(255,255,255,.6);
-                &:hover{
-                    color: white;
-                    transition: color .2s ease-in;
-                }
-                &:first-child{
-                    font-size: 22px;
-                }
-                &:nth-of-type(2) {
-                    padding-left: 5px;
-                }
-                &:last-child, &:nth-last-of-type(2){
-                    padding-left: 8px;
-                }
-                &:last-child {
-                    padding-right: 15px;
-                }
-            }
-            .state {
-                &:hover {
-                    color: rgb(255,255,255);
-                    transition: color .2s ease-in;
-                }
-                font-size: 12px;
-                color: rgba(255,255,255,.6);
-                padding-left: 8px;
-            }
-        }
-        .dropContainer2 {
-            width: 450px;
-            height: 330px;
-            position: absolute;
-            top: 50px;
-            left: 300px;
-            &::before {
-                content:'';
-                background: #FAFAFA;
-                height: 15px;
-                width: 15px;
-                position: absolute;
-                top: -7px;
-                left: 30px;
-                z-index: 201;
-                transform: rotate(135deg);
-            }
-            .hotSearch,.ItemContainer {
-                font-size: 13px;
-                width: 50%;
-                float: left;
-                box-sizing: border-box;
-                padding: 10px 10px;
-                color:#888888;
-                border-right: 1px solid #ccc;
-                border-bottom: 1px solid #ccc;
-                &:last-child {
-                    border-right: none;
-                }
-                .iconfont {
-                    font-size: 12px;
-                    margin-right: 5px;
-                }
-            }
-            .ItemContainer{
-                position: relative;
-                height: 296px;
-                padding: 0;
-                .ItemContent {
-                    position: relative;
-                    font-size: 13px;
-                    color:#333;
-                    line-height: 28px;
-                    padding-left: 25px;
-                    cursor: pointer;
-                    &:hover {
-                        background: #EBECED;
-                    }
-                    .del {
-                        position: absolute;
-                        right: 0;
-                        width: 25px;
-                        height: 25px;
-                        text-align: center;
-                    }
-                }
-                .nothing {
-                    font-size: 20px;
-                    margin: 100px 50px;
-                }
-            }
-        }
-        .dropContainer3 {
-            width: 230px;
-            height: 400px;
-            position: absolute;
-            top: 50px;
-            left: 300px;
-            &::before {
-                content:'';
-                background: #FAFAFA;
-                height: 15px;
-                width: 15px;
-                position: absolute;
-                top: -7px;
-                left: 30px;
-                z-index: 201;
-                transform: rotate(135deg);
-            }
-            .searchTitle {
-                cursor: pointer;
-                margin: 10px;
-                font-size: 13px;
-                color: #555;
-                &:hover {
-                    color: #333;
-                }
-            }
-            .adviseItem {
-                margin-bottom: 10px;
-                .ItemTitle {
-                    padding-left: 10px;
-                    margin-bottom: 10px;
-                    font-size: 13px;
-                    color:#333333;
-                    .iconfont {
-                        font-size: 13px;
-                        margin-right: 8px;
-                    }
-                }
-                .adviseItemContainer {
-                    font-size: 13px;
-                    
-                    .adviseItemContent {
-                        box-sizing: border-box;
-                        line-height: 28px;
-                        width: 100%;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                        padding-left: 28px;
-                        &:hover {
-                            cursor: pointer;
-                            background: #EBECED;
-                        }
-                    }
-                }
-            }
+        &:focus{
+            border:none;
+            outline: none;
         }
     }
+    .icon-search{
+        left: -146px;
+    }
+    .icon-mic, .icon-search {
+        cursor: pointer;
+        position: relative;
+        color: #f1f1f1;
+        font-size: 13px;
+        &:hover{
+            color: rgba(255, 255, 255, 0.6);
+            transition: color .3s ease-in;
+        }
+    }
+    .icon-mic {
+        left: -2px;
+        font-size: 18px;
+        padding: 7px;
+        background: rgba(179, 65, 65, 0.23);
+        color: #f1f1f1;
+        border-radius: 50%;
+    }
+}
 </style>
     

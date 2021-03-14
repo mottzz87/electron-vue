@@ -3,7 +3,7 @@
  * @Desc         :  
  * @Date         : 2021-03-09 16:48:33
  * @LastEditors  : Zhao Dongxu
- * @LastEditTime : 2021-03-09 17:43:30
+ * @LastEditTime : 2021-03-12 15:51:43
  * @FilePath     : \src\config\settings.ts
  */
 /**
@@ -51,7 +51,7 @@ const settings: SettingsType = {
     siteTitle: 'ADMIN-ELEMENT-VUE',
     topNavEnable: false,
     headFixed: true,
-    siteTokenKey: 'admin_element_vue_token',
+    siteTokenKey: 'token',
     ajaxHeadersTokenKey: 'x-token',
     ajaxResponseNoVerifyUrl: [
         '/login/cellphone', // 用户登录
