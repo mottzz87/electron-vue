@@ -3,12 +3,12 @@
  * @Desc         :  
  * @Date         : 2021-03-12 17:02:51
  * @LastEditors  : Zhao Dongxu
- * @LastEditTime : 2021-03-12 17:05:35
+ * @LastEditTime : 2021-03-15 10:54:02
  * @FilePath     : \src\services\netease\dashboard.ts
  */
 import axios from 'axios'
 
-export const url = "http://localhost:3000" 
+export const url = "http://localhost:8000" 
 
 //  手机号登录
 export const cellLogin = "/login/cellphone"

@@ -2,7 +2,7 @@
     <div id="indexlayout-left" :class="{'narrow': collapsed}">
         <div class="indexlayout-left-logo">
             <router-link to="/" class="logo-url">
-                <img v-if="collapsed" alt="Vue logo" src="../../../assets/images/logo.png" width="30">
+                <img v-if="collapsed" alt="Vue logo" src="../../../assets/images/logo.jpg" width="30">
                 <h3 v-else class="logo-title">AdminElementVue</h3>
             </router-link>
         </div>

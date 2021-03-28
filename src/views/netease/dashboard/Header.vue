@@ -1,18 +1,69 @@
 <template>
   <div class="header line-center drag">
-      <div class="logo-wrapper line-center nodrag-pointer" @click="tofind">
-          <div class="logo"></div>
-          <div class="name">网易云音乐</div>
-      </div>
-      <div class="search-wrapper line-center">
-          <span class="prev el-icon-arrow-left nodrag-pointer" @click="prev" :class="{'active':true}" ></span>
-          <span class="next el-icon-arrow-right nodrag-pointer" @click="next" :class="{'active':true}"  ></span>
-          <input class="search text nodrag" type="text" placeholder="搜索" 
-            @focus="inithotSearch"  v-model="keywords" @keyup="adviseSearch"  @keyup.enter="searchAll"
-          />
-          <i class="el-icon-search icon-search nodrag" @click="searchAll"></i>
-          <i class="el-icon-microphone icon-mic nodrag"  @click="toMic"></i>
-      </div>
+    <div class="logo-wrapper line-center nodrag-pointer" @click="tofind">
+        <div class="logo"></div>
+        <div class="name">网易云音乐</div>
+    </div>
+    <span class="search-wrapper line-center">
+        <span class="prev el-icon-arrow-left nodrag-pointer" @click="prev" :class="{'active':true}" ></span>
+        <span class="next el-icon-arrow-right nodrag-pointer" @click="next" :class="{'active':true}"  ></span>
+        <input class="search text nodrag" type="text" placeholder="搜索" 
+            v-model="keywords" 
+            @focus="inithotSearch"  
+            @keyup="adviseSearch" 
+            @keyup.enter="searchAll"
+        />
+        <i class="el-icon-search icon-search nodrag" @click="searchAll"></i>
+        <i class="el-icon-microphone icon-mic nodrag"  @click="toMic"></i>
+    </span>
+    <transition name="fade">
+        <div class="search-list" v-if="showTrending || showSearch">
+            <div v-if="showTrending" class="advices-list-wrapper">
+                <div class="history">
+                    <div class="card-title">
+                        搜索历史
+                        <i class="el-icon-delete icon-del" @click="delSearchHistory"></i>
+                    </div>
+                    <div class="history-list">
+                        <div class="history-button" v-for="(button, i) in historyList" :key="i">
+                            {{button}}
+                            <i class="el-icon-close icon-close" @click="delSearchHistory"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="trending">
+                    <div class="card-title">
+                        热搜榜
+                    </div>
+                    <div class="trending-list">
+                        <div class="list-item" v-for="(item, i) in trendingList" :key="i">
+                            <div class="list-item-sort flex-c">{{i + 1}}</div>
+                            <div class="item-song-info">
+                                <div class="song-wrapper">
+                                    <span class="song-title">{{item.searchWord}}</span>
+                                    <i class="song-hot" v-if="item.iconUrl">HOT</i>
+                                    <span class="song-count">{{item.score}}</span>
+                                </div>
+                                <div class="song-desc">
+                                    {{item.content}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-if="showSearch" class="serch-list-wrapper">
+                <div class="serch">
+                    <div class="card-title">
+                        查询
+                    </div>
+                    <div class="serch-list">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </transition>
   </div>
 </template>
 
@@ -28,8 +79,14 @@ const {ipcRenderer} = import('electron')
 export default {
     data() {
         return {
+            hasValueReg: /^[\s\S]*.*[^\s][\s\S]*$/,
             keywords: '',
             hotSearchList: null,
+            showTrending: false,
+            showSearch: false,
+            historyList: localStorage.searchHistory ? JSON.parse(localStorage.searchHistory) : [],
+            trendingList: []
+
         }
     },
     computed: {
@@ -65,27 +122,14 @@ export default {
         next() { 
             this.$router.go(1)
         },
-        // 关闭登录模态框
-        handleClose(done) {
-            this.dialogVisible = false
-        },
-        // 关闭确认退出模态框
-        handleLogutClose(done) {
-            this.logoutVisible = false
-        },
         // 回首页
         tofind() {
             this.$router.push('/find')
         },
         // 检查登录状态
         checkLogin() {
-            console.log(this.$store.state.userlogin.loginStatus === 'ok')
             if(this.$store.state.userlogin.loginStatus !== 'ok') return 
-           
-
         },
-
-        
 
         // 登录
         login() {
@@ -133,189 +177,48 @@ export default {
                 this.$router.push('/find/recommend')
             })
         },
-        //  初始化用户歌单列表
-        initCollectSongList() {
-            Axios(getUserSongList,this.params).then((res) => {
-                const ret = []
-                res.playlist.forEach((item) => {
-                    ret.push(item.id)
-                })
-                this.set_collectSongList(ret)
-            })
-        },
-
-        // 初始化用户收藏歌手列表
-        initCollectSingerList() {
-            Axios(getUserCollectSinger,this.params).then((res) => {
-                const ret = []
-                res.data.forEach((item) => {
-                    ret.push(item.id)
-                })
-                this.set_collectSinger(ret)
-            })
-        },
-        // 初始化喜欢音乐
-        initLikeMusic() {
-            Axios(getUserLikeMusic,this.params).then((res) => {
-                this.set_collectSong(res.ids)
-            })
-        },
-        // 初始化已收藏专辑列表
-        initCollectAlbum() {
-            Axios(getCollectAlbum,this.params).then((res) => {
-                const ret = []
-                res.data.forEach((item) => {
-                    ret.push(item.id)
-                })
-                this.setCollectAlbum(ret)
-            })
-        },
-        // 初始化播放历史
-        initHistory() {
-            const params = {
-                uid:this.id,
-                type:1
-            }
-            Axios(getUserPlayHistory,params).then((res) => {
-                const list = []
-                res.weekData.forEach((item) => {
-                    list.push(item.song)
-                })
-                this._normalizeSongs(list)
-            })
-        },
-        // 展示下拉框
-        showDrap() {
-            this.drap = !this.drap;
-        },
-        
-        // 初始化热搜列表
-        inithotSearch() {
-            if(this.keywords != '') {
-                this.adviseDrap = true
-                this.adviseSearch()
+        inithotSearch(e){
+            const { value } = e.target
+            if(this.hasValueReg.test(value)){
+                this.showTrending = false
+                this.showSearch = true
+                this.adviseSearch(value)
             }else{
-                this.searchDrap = true
-                if(this.hotSearchList) {
-                    return
-                }
-                getHotSearch({keywords: this.keywords}).then((res) => {
-                    this.hotSearchList = res.result.hots
-                })
-                if(localStorage.getItem('hisSearchList')) {
-                    this.hisSearchList = JSON.parse(localStorage.getItem('hisSearchList'))
-                }
+                this.showSearch = false
+                this.showTrending = true
+                this.getTrendingList()
             }
         },
-        //  搜索热搜内容
-        hotSearch(keywords) {
-            this.keywords = keywords
-            this.searchDrap = false
-            if(this.hisSearchList.includes(keywords)) {
-                const index = this.hisSearchList.indexOf(keywords)
-                this.hisSearchList.splice(index,1)
-                this.hisSearchList.unshift(keywords)
-                localStorage.setItem('hisSearchList',JSON.stringify(this.hisSearchList))
-            }else {
-                this.hisSearchList.push(keywords)
-                localStorage.setItem('hisSearchList',JSON.stringify(this.hisSearchList))
+        adviseSearch(){
+            if(this.hasValueReg.test(this.keywords)){
+                this.showSearch = true
+                this.showTrending = false
+            }else{
+                this.showTrending = true
+                this.showSearch = false
             }
-            this.searchAll()
         },
-        //  删除搜索历史记录
-        delHisSearchItem(index) {
-            this.hisSearchList.splice(index,1)
-            localStorage.setItem('hisSearchList',JSON.stringify(this.hisSearchList))
+        setLocalsearch(){
+            if(!this.hasValueReg.test(this.keywords)) return
+            this.historyList = this.historyList.filter(v => v !== this.keywords);
+            this.historyList.splice(0,0,this.keywords)
+            localStorage.setItem('searchHistory', JSON.stringify(this.historyList))
         },
-        //  显示建议搜索的内容
-        adviseSearch() {
-            clearTimeout(this.iTime);
-            this.iTime = setTimeout(() => {
-                if(this.keywords == "") {
-                    this.searchDrap = true
-                    this.adviseDrap = false
-                    return
-                }else{
-                    this.searchDrap = false
-                    this.adviseDrap = true
-                    const params = {
-                        keywords: this.keywords
-                    }
-                    Axios(adviseSearch,params).then((res) => {
-                        this.adviseSearchList = res.result
-                        this.adviseSongList = this._normalizeSongs(this.adviseSearchList.songs)
-                    })
-                }
-            }, 200);
+        searchAll(){
+            this.setLocalsearch()
         },
-        playSong(mid,aid,index) {
-
-            Axios(getAlbumDetail,{
-                id: aid
-            }).then((res) => {
-                const picUrl = res.album.picUrl
-                this.adviseSongList[index].picUrl = picUrl
-            })
-            Axios(getSongUrl,{
-                id: mid
-            }).then((res) => {
-                const url = res.data[0].url
-                this.adviseSongList[index].url = url
-                this.insertSong(this.adviseSongList[index])
-                this.adviseDrap = false 
+        delSearchHistory(){
+            alert('删除所有')
+        },
+        getTrendingList(){
+            Axios(getHotSearch).then(({data}) => {
+                this.trendingList = data
             })
         },
-        toSinger(id) {
-            this.$router.push(`/singerDetail/${id}`)
-            this.adviseDrap = false
-        },
-        toSongList(id) {
-            this.$router.push(`/songListDetail/${id}`)
-            this.adviseDrap = false
-        },
-        toAlbum(id) {
-            this.$router.push(`/album/${id}`)
-            this.adviseDrap = false
-        },
-        searchAll() {
-            this.$router.push(`/search/${this.keywords}`)
-            this.adviseDrap = false
-            this.searchDrap = false
-        },
-        _normalizeSongs(list) {
-            const ret = []
-            for(let i = 0; i < list.length; i ++) {
-                ret.push((list[i]))
-            }
-            this.setPlayHistoryList(ret)
-            return ret
-        },
-        // 初始化收藏类函数
-        _initCollects() {
-            this.initCollectSongList()
-            this.initCollectSingerList()
-            this.initLikeMusic()
-            this.initHistory()
-            this.initCollectAlbum()
-        },
-        ...mapMutations({
-            setUserName: 'SET_USERNAME',
-            setNickName: 'SET_NICKNAME',
-            setUserId: 'SET_USERID',
-            setAvatarUrl: 'SET_AVATARURL',
-            // set_collectSongList:'SET_COLLECTSONGLIST',
-            // set_collectSinger:'SET_COLLECTSINGER',
-            // set_collectSong:'SET_COLLECTSONG',
-            setPlayHistoryList:'SET_PLAYHISTORYLIST',
-            setCollectAlbum:'SET_COLLECTALBUM'
-        }),
-        ...mapActions([
-            'insertSong'
-        ]),
         //听歌识曲
         toMic(){
             console.log(1)
-        }
+        },
     },
 }
 </script>
@@ -395,7 +298,7 @@ export default {
         font-size: 12px;
         &::placeholder {
             font-size: 12px;
-            color: #f08989;
+            color: #ee7676;
             // color: rgba(161,40,40,0.);
         }
         &:focus{
@@ -425,5 +328,138 @@ export default {
         border-radius: 50%;
     }
 }
+.search-list{
+    position: absolute;
+    top: 48px;
+    left: 256px;
+    background: #fff;
+    border-radius: 6px;
+    padding: 3px 0px;
+}
+.advices-list-wrapper{
+    width: 354px;
+    height: 450px;
+    margin-top: 5px;
+    overflow: auto;
+    .history{
+        .history-list{
+            margin: 0 20px;
+            .history-button{
+                position: relative;
+                white-space: nowrap;
+                float: left;
+                padding: 6px 15px;
+                margin-right: 10px;
+                margin-bottom: 10px;
+                color: #633636;
+                border:1px solid #d6d6d6;
+                border-radius: 20px;
+                font-size: 12px;
+                cursor: pointer;
+                .icon-close{
+                    display: inline-flex;
+                    position: absolute;
+                    font-size: 14px;
+                    color: #aaa;
+                    top: 6px;
+                    right: 2px;
+                    display: none
+                }
+                &:hover{
+                    background: rgba(243,243,243, 1);
+                    .icon-close{
+                        display: block
+                    }
+                }
+            }
+        }
+    }
+    .trending{
+        display: inline-block;
+        margin-top: 10px;
+        width: 100%;
+        .trending-list{
+            .list-item-sort{
+                font-weight: 600;
+                color: #e62929d1;
+                width: 54px;
+            }
+            .item-song-info{
+                line-height: 22px;
+                .song-wrapper{
+                    .song-title{
+                        color: #313131;
+                        font-weight: 600;
+                        font-size: 12px;
+                    }
+                    .song-hot{
+                        display: inline-block;
+                        font-size: 12px;
+                        font-weight: 600;
+                        transform: scale(.8);
+                        margin-left: 8px;
+                        color: #e62929d1
+                    }
+                    .song-count{
+                        margin-left: 8px;
+                        color: #d6d6d6;
+                        font-size: 12px
+                    }
+                }
+                .song-desc{
+                    color: #a9a7a7;
+                    font-size: 12px
+                }
+            }
+            
+            .list-item{
+                display: flex;
+                padding: 4px 0;
+                cursor: pointer;
+                &:hover{
+                    background: #f1f1f1
+                }
+            }
+            .list-item:nth-child(n+4) {
+                .song-title{
+                    font-weight: 500;
+                }
+                .list-item-sort{
+                    color: #d6d6d6;
+                    font-weight: 500;
+                }
+            }
+        }
+    }
+}
+
+.serch-list-wrapper{
+    width: 354px;
+    margin-top: 5px;
+    overflow: auto;
+}
+.card-title{
+    font-size: 14px;
+    color: #797474;
+    margin: 9px 20px 14px 20px;
+    .icon-del{
+        cursor: pointer;
+        margin-left: 4px;
+        font-size: 15px;
+    }
+}
+
+.fade-enter,.fade-leave-to {
+    opacity: 0;
+}
+.fade-enter-active,.fade-leave-active {
+    transition: opacity .2s ease-in;
+}
+.flex-c{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 </style>
     

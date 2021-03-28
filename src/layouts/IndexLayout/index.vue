@@ -53,7 +53,7 @@ import { mergeUnique as ArrayMergeUnique } from '@/utils/array';
 import useTitle from '@/composables/useTitle';
 import IndexLayoutRoutes from './routes';
 import Permission from '@/components/Permission/index.vue';
-// import Left from './components/Left.vue';
+import Left from './components/Left.vue';
 // import RightTop from './components/RightTop.vue';
 import RightFooter from './components/RightFooter.vue';
 // import Settings from "./components/Settings.vue";

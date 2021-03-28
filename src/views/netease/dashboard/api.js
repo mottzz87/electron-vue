@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const url = "http://localhost:3000" 
+export const url = "" 
 
 //  手机号登录
 export const cellLogin = "/login/cellphone"
@@ -17,7 +17,7 @@ export const getUserPlayHistory = "/user/record"
 
 
 //  获取热搜
-export const getHotSearch = "/search/hot"
+export const getHotSearch = "/search/hot/detail"
 //  获取建议热搜内容
 export const adviseSearch = "/search/suggest"
 //  获取搜索内容
