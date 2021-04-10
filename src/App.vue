@@ -3,7 +3,7 @@
  * Desc         :  
  * Date         : 2021-03-09 16:48:33
  * LastEditors  : Zhao Dongxu
- * LastEditTime : 2021-03-17 17:33:21
+ * LastEditTime : 2021-04-08 11:27:21
  * FilePath     : \src\App.vue
  -->
 <template>
@@ -32,3 +32,14 @@ export default defineComponent({
   }
 })
 </script>
+<style>
+  @import "//at.alicdn.com/t/font_2471506_fyk9mmwl30q.css";
+
+  [class^="el-icon-m"], [class^=" el-icon-m"] {
+    font-family: "iconfont", serif !important;
+    font-size: 20px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+</style>

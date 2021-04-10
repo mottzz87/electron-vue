@@ -1,8 +1,9 @@
 <template>
   <div class="header line-center drag">
     <div class="logo-wrapper line-center nodrag-pointer" @click="tofind">
-        <div class="logo"></div>
-        <div class="name">网易云音乐</div>
+        <!-- <div class="logo"></div>
+        <div class="name">网易云音乐</div> -->
+        <i class="el-icon-m-wangyiyunyinle logo"></i>
     </div>
     <span class="search-wrapper line-center">
         <span class="prev el-icon-arrow-left nodrag-pointer" @click="prev" :class="{'active':true}" ></span>
@@ -14,7 +15,7 @@
             @keyup.enter="searchAll"
         />
         <i class="el-icon-search icon-search nodrag" @click="searchAll"></i>
-        <i class="el-icon-microphone icon-mic nodrag"  @click="toMic"></i>
+        <i class="el-icon-m-yinpin1 icon-mic nodrag"  @click="toMic"></i>
     </span>
     <transition name="fade">
         <div class="search-list" v-if="showTrending || showSearch">
@@ -72,7 +73,7 @@ import {mapMutations,mapGetters,mapActions} from 'vuex'
 import * as Api from '@/services/netease/dashboard'
 import {Axios,cellLogin,getUserSongList,getUserCollectSinger,getUserLikeMusic,
 getUserPlayHistory,Logout,getHotSearch,adviseSearch,getAlbumDetail,getSongUrl,
-getCollectAlbum} from './api'
+getCollectAlbum} from './api.ts'
 
 const {ipcRenderer} = import('electron')
 
@@ -249,23 +250,13 @@ export default {
     margin-right: 5px;
 }
 .logo-wrapper {
-    // width: 180px;
+    width: 135px;
     height: 100%;
     margin-right: 50px;
     .logo {
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
+        font-size: 23px;
+        color: #fff;
         margin: 0 2px 0 18px;
-        background: url('../../../assets/images/logo.jpg') no-repeat center;
-        background-size: cover;
-    }
-    .name {
-        color: white;
-        font-weight: bold;
-        margin-left: 5px;
-        line-height: 25px;
-        font-family:"幼圆";
     }
 }
 .search-wrapper{
@@ -275,7 +266,7 @@ export default {
     }
     .prev,.next{
         border-radius: 50%;
-        font-size: 14px;
+        font-size: 13px;
         /* border: 1px solid #A82828; */
         background: rgba(179, 65, 65, 0.23);
         padding: 5px;
@@ -283,13 +274,13 @@ export default {
     }
     .next {
         border-left:none;
-        margin-right: 14px;
+        margin-right: 12px;
         margin-left: 8px;
     }
     input{
         width: 160px;
         border-radius: 30px;
-        padding: 10px 11px 10px 30px;
+        padding: 9px 11px 9px 30px;
         background: rgba(179, 65, 65, 0.23);
         -webkit-app-region: no-drag;
         color: white;
@@ -307,25 +298,26 @@ export default {
         }
     }
     .icon-search{
-        left: -146px;
+        left: -149px;
     }
     .icon-mic, .icon-search {
         cursor: pointer;
         position: relative;
         color: #f1f1f1;
-        font-size: 13px;
+        font-size: 14px;
+        
         &:hover{
             color: rgba(255, 255, 255, 0.6);
             transition: color .3s ease-in;
         }
     }
     .icon-mic {
-        left: -2px;
-        font-size: 18px;
-        padding: 7px;
+        left: -5px;
+        font-size: 16px;
+        padding: 7.5px;
         background: rgba(179, 65, 65, 0.23);
-        color: #f1f1f1;
         border-radius: 50%;
+        color: rgba(255, 255, 255, 0.6)
     }
 }
 .search-list{

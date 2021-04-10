@@ -3,7 +3,7 @@
  * Desc         :  
  * Date         : 2021-03-09 16:48:33
  * LastEditors  : Zhao Dongxu
- * LastEditTime : 2021-03-12 16:10:17
+ * LastEditTime : 2021-04-07 11:12:53
  * FilePath     : \src\layouts\SecurityLayout.vue
  -->
 <template>
@@ -46,7 +46,6 @@ export default defineComponent({
             loading.value = true;
             await store.dispatch('user/fetchCurrent');
             const isLogin = !!(await getToken());
-            console.log(store.state)
             if(!isLogin && router.currentRoute.value.path !== '/user/login') {
                 router.replace({
                     path: '/user/login',
