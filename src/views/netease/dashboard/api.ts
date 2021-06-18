@@ -121,7 +121,7 @@ export const getSongUrl = "/song/url"
 export const sendComment = "/comment"
 
 
-export function Axios(api,params) {
+export function Axios(api: string,params: any) {
     return new Promise((resolve,reject) => {
         axios.get(url+api,{
             params: params ? params : {}

@@ -2,9 +2,9 @@
  * Author       : Zhao Dongxu
  * Desc         :  
  * Date         : 2021-03-17 15:51:55
- * LastEditors  : Zhao Dongxu
- * LastEditTime : 2021-04-09 18:00:48
- * FilePath     : \src\views\netease\dashboard\player.vue
+ * LastEditors  : Vane
+ * LastEditTime : 2021-04-11 02:14:57
+ * FilePath     : /src/views/netease/dashboard/Player.vue
  -->
 <template>
   <div class="player-wrapper">
@@ -77,7 +77,7 @@ export default {
       timer: null,
       time: 0,
       currentSong: {
-        url: 'http://m10.music.126.net/20210409175009/7c68d4e1ba43f6859ff5b2e467fa6f22/yyaac/obj/wonDkMOGw6XDiTHCmMOi/2270178263/fa92/1886/c282/fe84531951856644fa9285e2f3214b46.m4a'
+        url: 'http://m801.music.126.net/20210411023943/553d3e49c1c36a24cfbc01e784db1ed9/jdyyaac/obj/w5rDlsOJwrLDjj7CmsOj/8077326372/dd9f/f8dd/d268/0bdade8f08b752b8a2a62771f7841472.m4a'
       }
     }
   },
@@ -391,7 +391,6 @@ export default {
             height: 3px;
             position: absolute;
             border-radius: 3px;
-            width: 50px;
             left: 0;
             top: 0;
             background: red;
@@ -402,7 +401,6 @@ export default {
             height: 9px;
             position: absolute;
             border-radius: 50%;
-            left: 46px;
             top: -3px;
             background: red;
             display: none;
@@ -410,9 +408,9 @@ export default {
         }
       }
     }
-    .song-info-right{
+    // .song-info-right{
       
-    }
+    // }
     
   }
   i{

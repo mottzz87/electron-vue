@@ -37,7 +37,7 @@
                         热搜榜
                     </div>
                     <div class="trending-list">
-                        <div class="list-item" v-for="(item, i) in trendingList" :key="i">
+                        <div class="list-item" v-for="(item, i) in trendingList" :key="i" @click="playSong(item)">
                             <div class="list-item-sort flex-c">{{i + 1}}</div>
                             <div class="item-song-info">
                                 <div class="song-wrapper">
@@ -220,6 +220,9 @@ export default {
         toMic(){
             console.log(1)
         },
+        playSong(song){
+            console.log(song)
+        }
     },
 }
 </script>
