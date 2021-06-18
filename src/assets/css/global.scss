@@ -1,0 +1,66 @@
+@import './element-variables.scss';
+@import './variables.scss';
+@import './mixin.scss';
+.flex-wrap-wrap {
+    flex-wrap: wrap;
+}
+
+a {
+    color: #1890ff;
+    text-decoration: none;
+    background-color: transparent;
+    outline: none;
+    cursor: pointer;
+    transition: color .3s;
+}
+a:active,
+a:hover {
+    text-decoration: none;
+    outline: 0;
+}
+a:active {
+    color: #096dd9;
+}
+a:hover {
+    color: #40a9ff;
+}
+
+.border-solid-transparent{
+    border: solid 1px transparent;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+.float-right {
+    float: right;
+}
+
+.padding-t10 {
+    padding-top: 10px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+/* 滚动槽 */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    border-radius: 3px;
+    background: transparent;
+    // -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.08);
+}
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background: rgba(0,0,0,0.016);
+    -webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.16);
+    &:hover{
+        background: rgba(0,0,0,0.02);
+        -webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.24);
+    }
+}
